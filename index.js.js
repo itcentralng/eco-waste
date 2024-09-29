@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Africastalking = require('africastalking');
 
-// Initialize Africastalking
 const africastalking = Africastalking({
     username: 'sandbox',
     apiKey: 'atsk_257d9bc79efcda5dc2c66f819cc83a137850ac4d6ca1a353afe438e966f22c2aab858267'
@@ -68,21 +67,19 @@ const translations = {
 };
 
 
-// Function to simulate rainy day detection for the month
 function getRainyDays() {
     const rainyDays = [];
     for (let i = 1; i <= 30; i++) {
-        if (Math.random() < 0.2) { // 20% chance of rain on any given day
+        if (Math.random() < 0.2) { 
             rainyDays.push(i);
         }
     }
     return rainyDays;
 }
 
-// Function to calculate pickup frequency based on family size and bin usage
 function calculatePickupFrequency(familySize, binUsage) {
     const baseFrequency = Math.max(1, 6 + binUsage);
-    const familyAdjustment = familySize > 4 ? 1 : 1.5; // Slightly lower adjustment for larger families
+    const familyAdjustment = familySize > 4 ? 1 : 1.5;
     const adjustedFrequency = Math.round(baseFrequency / familyAdjustment);
     return Math.max(1, adjustedFrequency); 
 }
@@ -122,7 +119,7 @@ app.post('/ussd', async (req, res) => {
                 response = translations[language].enterFamilySize;
             } else if (userInputs[1] === '2') {
                 const report = userInputs[2];
-                const managementNumber = '+2348108005192'; // Replace with the actual management number
+                const managementNumber = '+2348108005192';
 
                 try {
                     const smsResponse = await sms.send({
@@ -142,7 +139,7 @@ app.post('/ussd', async (req, res) => {
             break;
             case 4:
                 if (userInputs[1] === '1') {
-                    userData[phoneNumber].familySize = parseInt(userInputs[3], 10);  // Storing family size
+                    userData[phoneNumber].familySize = parseInt(userInputs[3], 10);
                     response = translations[language].enterBinUsage;
                 } else {
                     response = translations[language].invalidInput;
@@ -150,7 +147,7 @@ app.post('/ussd', async (req, res) => {
                 break;
             case 5:
                 if (userInputs[1] === '1') {
-                    userData[phoneNumber].binUsage = parseInt(userInputs[4], 10); // Storing bin usage
+                    userData[phoneNumber].binUsage = parseInt(userInputs[4], 10);
                     const pickupFrequency = calculatePickupFrequency(userData[phoneNumber].familySize, userData[phoneNumber].binUsage);
                     const rainyDays = getRainyDays();
             
